@@ -1,4 +1,6 @@
-# Starter React
+# Y
+
+An amazing social network. (Of course better than X...)
 
 ## Getting started
 
