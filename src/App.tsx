@@ -1,11 +1,10 @@
-import { BrowserRouter } from "react-router-dom";
-import { Router } from "./containers/Router";
+import { BrowserRouter } from 'react-router-dom';
 import './index.scss';
 
 const App = () => (
   <main className="App">
     <BrowserRouter>
-      <Router />
+      <h1>Y is an amazing social network !</h1>
     </BrowserRouter>
   </main>
 );
