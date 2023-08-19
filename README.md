@@ -54,6 +54,12 @@ Docker build:
 docker build -t starter-react:local .
 ```
 
+## Deployment
+
+Deployment is powered by Vercel.
+ - [Production](https://y-six-theta.vercel.app/)
+ - [Configuration link](https://vercel.com/gabbloquet/y)
+
 ## Going further
 
 - [Github actions documentation](https://docs.github.com/en/actions)
