@@ -1,10 +1,11 @@
 import { BrowserRouter } from 'react-router-dom';
+import { Heading } from '@chakra-ui/react';
 import './index.scss';
 
 const App = () => (
   <main className="App">
     <BrowserRouter>
-      <h1>Y is an amazing social network !</h1>
+      <Heading>Y is an amazing social network !</Heading>
     </BrowserRouter>
   </main>
 );
