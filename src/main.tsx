@@ -4,7 +4,7 @@ import { RouterProvider } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 import { router } from './router';
 import { Provider } from 'react-redux';
-import { createStore, Dependencies } from '@/lib/create-store';
+import { createStore, Dependencies } from '@/lib/store';
 import { FakeTimelineRepository } from '@/lib/timeline/infra/fake-timeline.repository';
 import { FakeAuthRepository } from '@/lib/auth/infra/fake-auth.repository';
 

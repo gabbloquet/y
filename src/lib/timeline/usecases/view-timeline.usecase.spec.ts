@@ -2,7 +2,7 @@ import { Timeline } from '../model/timeline.model';
 import { viewTimeline } from './view-timeline.usecase';
 import { FakeTimelineRepository } from '../infra/fake-timeline.repository';
 import { FakeAuthRepository } from '@/lib/auth/infra/fake-auth.repository';
-import { createStore } from '@/lib/create-store';
+import { createStore } from '@/lib/store';
 import { selectTimeline, selectIsTimelineLoading } from '@/lib/timeline/slices/timeline.slice';
 import { User } from '@/lib/user/user.model';
 

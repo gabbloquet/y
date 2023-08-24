@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Timeline } from '../model/timeline.model';
 import { viewTimeline } from '../usecases/view-timeline.usecase';
-import { RootState } from '@/lib/create-store';
+import { RootState } from '@/lib/store';
 
 export type TimelineState = {
   status: 'loading' | 'success' | 'error';
