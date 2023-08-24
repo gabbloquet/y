@@ -1,15 +1,16 @@
 import { Timeline } from '../model/timeline.model';
 import { viewTimeline } from './view-timeline.usecase';
-import { FakeTimelineGateway } from '../infra/fake-timeline.gateway';
-import { FakeAuthGateway } from '@/lib/auth/infra/fake-auth.gateway';
+import { FakeTimelineRepository } from '../infra/fake-timeline.repository';
+import { FakeAuthRepository } from '@/lib/auth/infra/fake-auth.repository';
 import { createStore } from '@/lib/create-store';
+import { selectTimeline, selectIsTimelineLoading } from '@/lib/timeline/slices/timeline.slice';
+import { User } from '@/lib/user/user.model';
 
 describe("Feature: View authenticated user's timeline usecase", () => {
   it('Example: Alice is authenticated and see her timeline', async () => {
     // Given
     givenAuthenticatedUser('Alice');
-    givenExistingTimeline({
-      user: 'Alice',
+    givenExistingTimeline('Alice', {
       messages: [
         {
           text: "Hello it's Bob !!",
@@ -29,7 +30,6 @@ describe("Feature: View authenticated user's timeline usecase", () => {
 
     // Then
     thenTheReceivedTimelineShouldBe({
-      user: 'Alice',
       messages: [
         {
           text: "Hello it's Bob !!",
@@ -44,27 +44,57 @@ describe("Feature: View authenticated user's timeline usecase", () => {
       ]
     });
   });
+
+  it('Example: Alice timeline is fetching', async () => {
+    // Given
+    givenAuthenticatedUser('Alice');
+    givenExistingTimeline('Alice', {
+      messages: [
+        {
+          text: "Hello it's Bob !!",
+          author: 'Bob',
+          publishedAt: '2023-05-16T12:02:00.000Z'
+        },
+        {
+          text: "Hello it's Alice",
+          author: 'Alice',
+          publishedAt: '2023-05-16T12:06:00.000Z'
+        }
+      ]
+    });
+
+    // When
+    const getTimelinePromise = whenAuthenticatedUserViewHisTimeline();
+
+    // Then
+    thenTheTimelineShouldBeLoading();
+    await getTimelinePromise;
+  });
 });
 
-const authGateway = new FakeAuthGateway();
-const timelineGateway = new FakeTimelineGateway();
+const authRepository = new FakeAuthRepository();
+const timelineRepository = new FakeTimelineRepository();
 const store = createStore({
-  authGateway,
-  timelineGateway
+  authRepository,
+  timelineRepository
 });
 
-const givenAuthenticatedUser = (userId: string) => {
-  authGateway.authUser = userId;
+const givenAuthenticatedUser = (firstname: string) => {
+  authRepository.authenticatedUser = User.of(firstname);
 };
-
-const givenExistingTimeline = (timeline: Timeline) => {
-  timelineGateway.timelineByUser.set('Alice', timeline);
+const givenExistingTimeline = (firstname: string, timeline: Timeline) => {
+  timelineRepository.timelineByUser.set(firstname, timeline);
 };
 
 const whenAuthenticatedUserViewHisTimeline = async () => {
-  await store.dispatch(viewTimeline());
+  return store.dispatch(viewTimeline());
+};
+
+const thenTheTimelineShouldBeLoading = () => {
+  const isUserTimelineLoading = selectIsTimelineLoading(store.getState());
+  expect(isUserTimelineLoading).toBe(true);
 };
 const thenTheReceivedTimelineShouldBe = (expectedTimeline: Timeline) => {
-  const authUserTimeline = store.getState();
+  const authUserTimeline = selectTimeline(store.getState());
   expect(authUserTimeline).toStrictEqual(expectedTimeline);
 };

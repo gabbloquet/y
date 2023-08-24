@@ -1,5 +1,4 @@
 export type Timeline = {
-  user: string;
   messages: Message[];
 };
 

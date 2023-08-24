@@ -1,19 +1,36 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Message } from '../model/timeline.model';
+import { Timeline } from '../model/timeline.model';
 import { viewTimeline } from '../usecases/view-timeline.usecase';
+import { RootState } from '@/lib/create-store';
 
 export type TimelineState = {
-  user: string;
-  messages: Message[];
+  status: 'loading' | 'success' | 'error';
+  timeline?: Timeline;
 };
 
 export const timelineSlice = createSlice({
   name: 'timeline',
-  initialState: {},
+  initialState: {} as TimelineState,
   reducers: {},
   extraReducers(builder) {
-    builder.addCase(viewTimeline.fulfilled, (_, action) => {
-      return action.payload;
-    });
+    builder
+      .addCase(viewTimeline.pending, () => {
+        return {
+          status: 'loading',
+          timeline: undefined
+        };
+      })
+      .addCase(viewTimeline.fulfilled, (_, action) => {
+        return {
+          status: 'success',
+          timeline: action.payload
+        };
+      });
   }
 });
+
+export const selectIsTimelineLoading = (state: RootState) => state.timeline.status === 'loading';
+
+export const selectTimeline = (state: RootState) => state.timeline.timeline;
+
+export default timelineSlice.reducer;
